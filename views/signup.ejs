@@ -12,7 +12,7 @@
 
             <h3 class="text-2xl font-[Poppins]">Signup to <span class="text-blue-400 font-semibold font-sans">Scatch</span></h3>
         </div>
-        <form action="<%= serverUrl %>/users/register" method="post">
+        <form action="/users/register" method="post">
             <div class="mb-4">
                 <label for="fullname" class="block text-gray-700 font-semibold mb-2">Full Name</label>
                 <input type="text" id="fullname" name="fullname" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400" required>
@@ -28,7 +28,7 @@
             <button type="submit" class="w-full bg-blue-400 text-white py-3 rounded-md font-semibold  transition duration-300">Create Account</button>
         </form>
         <div class="mt-6 text-center">
-            <p>Already have an account? <a href="<%= serverUrl %>/login" class="text-blue-500 hover:text-blue-600">Login</a></p>
+            <p>Already have an account? <a href="/login" class="text-blue-500 hover:text-blue-600">Login</a></p>
         </div>
     </div>
 </div>

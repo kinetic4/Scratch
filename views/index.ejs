@@ -44,7 +44,7 @@
                             <h1 class="text-5xl font-bold mb-6" x-text="slide.title"></h1>
                             <p class="text-xl mb-12" x-text="slide.subtitle"></p>
                             <div class="flex justify-center">
-                                <a href="<%= serverUrl %>/shop" class="bg-white text-gray-800 py-6 px-12 rounded-full font-semibold hover:bg-gray-100 transition duration-300 text-lg font-[Lato]" x-text="slide.cta"></a>
+                                <a href="/shop" class="bg-white text-gray-800 py-6 px-12 rounded-full font-semibold hover:bg-gray-100 transition duration-300 text-lg font-[Lato]" x-text="slide.cta"></a>
                             </div>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
                                     <h3 class="font-semibold"><%= product.name %></h3>
                                     <h4 class="mt-1">₹<%= product.price.toLocaleString('en-IN') %></h4>
                                 </div>
-                                <a class="w-10 h-10 flex items-center justify-center rounded-full bg-white hover:bg-gray-100 transition-colors duration-300" href="<%= serverUrl %>/addtocart/<%= product._id %>" aria-label="Add to cart">
+                                <a class="w-10 h-10 flex items-center justify-center rounded-full bg-white hover:bg-gray-100 transition-colors duration-300" href="/addtocart/<%= product._id %>" aria-label="Add to cart">
                                     <i class="ri-add-line text-xl"></i>
                                 </a>
                             </div>
@@ -96,7 +96,7 @@
                     <% }) %>
                 </div>
                 <div class="text-center mt-12">
-                    <a href="<%= serverUrl %>/shop" class="inline-block bg-black text-white px-8 py-3 rounded-full hover:bg-gray-800 transition-colors duration-300">View All Products</a>
+                    <a href="/shop" class="inline-block bg-black text-white px-8 py-3 rounded-full hover:bg-gray-800 transition-colors duration-300">View All Products</a>
                 </div>
             </div>
         </section>
@@ -116,7 +116,7 @@
                             <h3><%= product.name %></h3>
                             <h4>₹<%= product.price %></h4>
                         </div>
-                        <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="<%= serverUrl %>/addtocart/<%= product._id %>">
+                        <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="/addtocart/<%= product._id %>">
                             <i class="ri-add-line"></i>
                         </a>
                     </div>
@@ -253,6 +253,7 @@
 </section>
 
     </main>
+
 </div>
 
 <%- include('./partials/footer') %>

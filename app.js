@@ -19,10 +19,6 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use((req, res, next) => {
-  res.locals.serverUrl = process.env.DEPLOYED_SERVER_URL;
-  next();
-});
 
 // Middleware
 app.use(express.json());
