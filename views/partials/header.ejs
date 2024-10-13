@@ -25,17 +25,17 @@
         <!-- Navigation Links -->
         <% if (loggedIn) { %>
             <div class="flex items-center gap-8 text-gray-700">
-                <a href="/" class="hover:text-gray-900 transition font-medium">Home</a>
-                <a href="/shop" class="hover:text-gray-900 transition font-medium">Shop</a>
-                <a href="/cart" class="hover:text-gray-900 transition font-medium">Cart</a>
-                <a href="/account" class="hover:text-gray-900 transition font-medium">My Account</a>
-                <a href="/users/logout" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300 font-medium">Logout</a>
+                <a href="<%= serverUrl %>/" class="hover:text-gray-900 transition font-medium">Home</a>
+                <a href="<%= serverUrl %>/shop" class="hover:text-gray-900 transition font-medium">Shop</a>
+                <a href="<%= serverUrl %>/cart" class="hover:text-gray-900 transition font-medium">Cart</a>
+                <a href="<%= serverUrl %>/account" class="hover:text-gray-900 transition font-medium">My Account</a>
+                <a href="<%= serverUrl %>/users/logout" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300 font-medium">Logout</a>
             </div>
         <% } else { %>
             <div class="flex items-center gap-8 text-gray-700">
-                <a href="/" class="hover:text-gray-900 transition font-medium">Home</a>
-                <a href="/login" class="hover:text-gray-900 transition font-medium">Login</a>
-                <a href="/signup" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 font-medium">Sign Up</a>
+                <a href="<%= serverUrl %>/" class="hover:text-gray-900 transition font-medium">Home</a>
+                <a href="<%= serverUrl %>/login" class="hover:text-gray-900 transition font-medium">Login</a>
+                <a href="<%= serverUrl %>/signup" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 font-medium">Sign Up</a>
             </div>
         <% } %>
     </nav>

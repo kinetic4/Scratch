@@ -24,11 +24,11 @@
                 <div>
                     <h4 class="text-white text-lg font-semibold mb-4">Quick Links</h4>
                     <ul class="space-y-2">
-                        <li><a href="/" class="hover:text-white transition">Home</a></li>
-                        <li><a href="/shop" class="hover:text-white transition">Shop</a></li>
-                        <li><a href="/cart" class="hover:text-white transition">Cart</a></li>
-                        <li><a href="/account" class="hover:text-white transition">My Account</a></li>
-                        <li><a href="/contact" class="hover:text-white transition">Contact Us</a></li>
+                        <li><a href="<%= serverUrl %>/" class="hover:text-white transition">Home</a></li>
+                        <li><a href="<%= serverUrl %>/shop" class="hover:text-white transition">Shop</a></li>
+                        <li><a href="<%= serverUrl %>/cart" class="hover:text-white transition">Cart</a></li>
+                        <li><a href="<%= serverUrl %>/account" class="hover:text-white transition">My Account</a></li>
+                        <li><a href="<%= serverUrl %>/contact" class="hover:text-white transition">Contact Us</a></li>
                     </ul>
                 </div>
     
@@ -36,7 +36,7 @@
                 <div>
                     <h4 class="text-white text-lg font-semibold mb-4">Subscribe to Our Newsletter</h4>
                     <p class="text-sm mb-4">Get the latest updates on new arrivals and special offers directly to your inbox.</p>
-                    <form action="/subscribe" method="POST" class="flex items-center space-x-2">
+                    <form action="<%= serverUrl %>/subscribe" method="POST" class="flex items-center space-x-2">
                         <input type="email" name="email" placeholder="Your Email" class="px-4 py-2 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition">
                             Subscribe
