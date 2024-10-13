@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scatch</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <nav class="w-full flex justify-between items-center px-9 py-5 bg-white shadow-md sticky top-0 z-50 font-[Poppins]">
+        <!-- Error Message Box -->
+        <% if (error && error.length > 0) { %>
+            <div class="absolute top-5 left-1/2 -translate-x-1/2 p-3 rounded-md bg-red-500 font-[Poppins]">
+                <span class="inline-block mt-1 mb-1 text-white"><%= error[0] %></span>
+            </div>
+        <% } %>
+        
+        <!-- Logo -->
+        <h3 class="text-2xl font-semibold text-blue-400">Scatch</h3>
+        
+        <!-- Navigation Links -->
+        <% if (loggedIn) { %>
+            <div class="flex items-center gap-8 text-gray-700">
+                <a href="/" class="hover:text-gray-900 transition font-medium">Home</a>
+                <a href="/shop" class="hover:text-gray-900 transition font-medium">Shop</a>
+                <a href="/cart" class="hover:text-gray-900 transition font-medium">Cart</a>
+                <a href="/account" class="hover:text-gray-900 transition font-medium">My Account</a>
+                <a href="/users/logout" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300 font-medium">Logout</a>
+            </div>
+        <% } else { %>
+            <div class="flex items-center gap-8 text-gray-700">
+                <a href="/" class="hover:text-gray-900 transition font-medium">Home</a>
+                <a href="/login" class="hover:text-gray-900 transition font-medium">Login</a>
+                <a href="/signup" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 font-medium">Sign Up</a>
+            </div>
+        <% } %>
+    </nav>
+</body>
+</html>
