@@ -1,0 +1,79 @@
+<%- include('./partials/header') %>
+
+<div class="flex justify-center items-center min-h-screen bg-gray-50">
+    <div class="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+        <h1 class="text-3xl font-semibold text-center text-gray-800 mb-4">Verify Your OTP</h1>
+        
+        <% if (error && error.length > 0) { %>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-6 text-sm">
+                <strong>Error:</strong> <%= error %>
+            </div>
+        <% } %>
+
+        <form action="/owners/verify-otp" method="POST" class="flex flex-col items-center" id="otpForm">
+           
+            <label for="otp" class="mb-2 text-sm text-gray-600">Enter OTP:</label>
+            <div class="flex space-x-2 mb-6">
+                <input id="otp1" name="otp1" maxlength="1" required
+                    class="otp-input w-12 h-12 text-2xl text-center border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200" />
+                <input id="otp2" name="otp2" maxlength="1" required
+                    class="otp-input w-12 h-12 text-2xl text-center border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200" />
+                <input id="otp3" name="otp3" maxlength="1" required
+                    class="otp-input w-12 h-12 text-2xl text-center border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200" />
+                <input id="otp4" name="otp4" maxlength="1" required
+                    class="otp-input w-12 h-12 text-2xl text-center border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200" />
+                <input id="otp5" name="otp5" maxlength="1" required
+                    class="otp-input w-12 h-12 text-2xl text-center border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200" />
+                <input id="otp6" name="otp6" maxlength="1" required
+                    class="otp-input w-12 h-12 text-2xl text-center border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200" />
+            </div>
+
+            <button type="submit" 
+                class="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 transition duration-300">
+                Verify OTP
+            </button>
+        </form>
+
+        <p class="mt-4 text-center text-gray-600">
+            Didn’t receive the OTP? 
+            <a href="/resend-otp" class="text-blue-500 hover:underline font-semibold">Resend OTP</a>
+        </p>
+    </div>
+</div>
+
+<%- include('./partials/footer') %>
+<script>
+    document.getElementById('otpForm').addEventListener('submit', function(event) {
+        const otpFields = document.querySelectorAll('input[name^="otp"]');
+        let otp = '';
+        otpFields.forEach(field => {
+            otp += field.value;
+        });
+        
+        if (otp.length === otpFields.length) {
+            const otpInput = document.createElement('input');
+            otpInput.type = 'hidden';
+            otpInput.name = 'otp'; 
+            otpInput.value = otp;
+            this.appendChild(otpInput);
+        } else {
+            event.preventDefault(); 
+            alert("Please complete all OTP fields.");
+        }
+    });
+
+    const otpInputs = document.querySelectorAll('.otp-input');
+    otpInputs.forEach((input, index) => {
+        input.addEventListener('input', function() {
+            if (this.value.length === 1 && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus(); // Move to the next field
+            }
+        });
+
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+                otpInputs[index - 1].focus(); // Move to the previous field
+            }
+        });
+    });
+</script>

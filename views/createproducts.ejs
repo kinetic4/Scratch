@@ -1,48 +1,86 @@
 <%- include('./partials/header') %>
 
-<% if(success.length>0){ %>
-    <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500 font-sans">
-        <span class="inline-block mt-1 mb-1 text-white">
-            <%= success %>
-        </span>
+<% if (success.length > 0) { %>
+    <div class="absolute top-5 left-1/2 transform -translate-x-1/2 p-3 rounded-md bg-blue-500 text-white shadow-lg">
+        <span class="inline-block mt-1 mb-1"><%= success %></span>
+        <button onclick="this.parentElement.style.display='none'" class="absolute top-2 right-2 text-white hover:text-gray-200">&times;</button>
     </div>
-    <% } %>
-    <div class="min-h-screen flex flex-col">
-        <div class="container px-10 py-20 flex flex-grow">
-            <div class="w-[25%] flex h-screen flex-col items-start font-sans">
-                <div class="flex flex-col">
-                    <a class="block w-fit mb-2" href="">All Products</a>
-                    <a class="block w-fit mb-2" href="">Create new product</a>
-                </div>
-            </div>
-            <main class="w-3/4 bg-white p-8 shadow ml-4 font-sans">
-                <h2 class="text-xl font-bold mb-4">Create New Product</h2>
-                <form action="/products/create" method="post" autocomplete="off" enctype="multipart/form-data">
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold mb-2 font-sans">Product Details</h3>
-                        <div class="mb-4">
-                            <label class="block mb-2 font-medium font-sans">Product Image</label>
-                            <input name="image" type="file" class="py-2 px-4 rounded" value="Select File">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4 font-sans">
-                            <input name="name" type="text" placeholder="Product Name" class="border p-2 rounded w-full">
-                            <input name="price" type="text" placeholder="Product Price" class="border p-2 rounded w-full">
-                            <input name="discount" type="text" placeholder="Discount Price" class="border p-2 rounded w-full">
-                        </div>
-                    </div>
+<% } %>
 
+<div class="min-h-screen flex flex-col items-center bg-gray-100 font-[Poppins]">
+    <div class="container mx-auto p-12 bg-white shadow-lg rounded-lg mt-[5rem]">
+        <div class="flex justify-between items-start space-x-6">
+            <nav class="w-1/4 flex flex-col space-y-4 text-gray-700 font-light">
+                <a class="block py-2 px-4 rounded hover:bg-gray-200 transition" href="/shop">All Products</a>
+                <a class="block py-2 px-4 rounded hover:bg-gray-200 transition" href="">Create new product</a>
+            </nav>
+            <main class="w-3/4">
+                <h2 class="text-3xl font-semibold mb-8 text-gray-800">Create New Product</h2>
+                <form action="/products/create" method="post" autocomplete="off" enctype="multipart/form-data" class="space-y-8">
                     <div>
-                        <h3 class="text-lg font-semibold mb-2">Panel Details</h3>
+                        <h3 class="text-lg font-semibold mb-4 text-gray-600">Product Details</h3>
+                        <div class="mb-8">
+                            <label class="block mb-2 text-gray-600 text-lg">Product Image</label>
+                            <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16m-7 4h7" />
+                                </svg>
+                                <p class="mt-2 text-gray-600 text-sm">Drag & Drop your file here or <span class="text-blue-600 cursor-pointer hover:underline">browse</span></p>
+                                <input name="image" type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                            </div>
+                            <div id="preview" class="mt-4 hidden relative">
+                                <img id="preview-image" class="mx-auto rounded-lg" alt="Preview">
+                                <button id="remove-image" type="button" class="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded cursor-pointer hover:bg-red-700">Remove</button>
+                            </div>
+                        </div>
                         <div class="grid grid-cols-2 gap-4">
-                            <input name='bgcolor' type="text" placeholder="Background Color" class="border p-2 rounded w-full">
-                            <input name='pannelcolor' type="text" placeholder="Panel Color" class="border p-2 rounded w-full">
-                            <input name="textcolor" type="text" placeholder="Text Color" class="border p-2 rounded w-full">
+                            <input name="name" type="text" placeholder="Product Name" class="border border-gray-300 p-3 rounded w-full text-gray-800">
+                            <input name="price" type="text" placeholder="Product Price" class="border border-gray-300 p-3 rounded w-full text-gray-800">
+                            <input name="discount" type="text" placeholder="Discount Price" class="border border-gray-300 p-3 rounded w-full text-gray-800">
+                            <input type="text" name="available" placeholder="Available Product (true or false)" class="border border-gray-300 p-3 rounded w-full text-gray-800">
+                            <input type="text" name="isNewCollection" placeholder="New Collection product (true or false)" class="border border-gray-300 p-3 rounded w-full text-gray-800">
                         </div>
                     </div>
-                    <input class="px-5 py-2 rounded mt-3 bg-blue-500 text-white cursor-pointer" type="submit"
-                        value="Create New Product">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4 text-gray-600">Panel Details</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input name='bgcolor' type="text" placeholder="Background Color" class="border border-gray-300 p-3 rounded w-full text-gray-800">
+                            <input name='pannelcolor' type="text" placeholder="Panel Color" class="border border-gray-300 p-3 rounded w-full text-gray-800">
+                            <input name="textcolor" type="text" placeholder="Text Color" class="border border-gray-300 p-3 rounded w-full text-gray-800">
+                        </div>
+                    </div>
+                    <div class="w-[62rem] flex items-center justify-center">
+                        <input class="w-[12rem] py-3 bg-blue-600 text-white rounded cursor-pointer hover:bg-blue-700 transition" type="submit" value="Create New Product">
+                    </div>
                 </form>
             </main>
         </div>
     </div>
-    <%- include('./partials/footer') %>
+</div>
+
+<%- include('./partials/footer') %>
+<script>
+    const imageInput = document.querySelector('input[name="image"]');
+    const preview = document.getElementById('preview');
+    const previewImage = document.getElementById('preview-image');
+    const removeImageBtn = document.getElementById('remove-image');
+
+    imageInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                preview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    removeImageBtn.addEventListener('click', function() {
+        previewImage.src = '';
+        preview.classList.add('hidden');
+        imageInput.value = ''; // Clear the input value
+    });
+
+</script>

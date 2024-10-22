@@ -4,32 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scatch</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
-    <nav class="w-full flex justify-between items-center px-9 py-5 bg-white shadow-md sticky top-0 z-50 font-[Poppins]">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-poppins" x-data="{ 
+    showLogoutModal: false, 
+    countdown: 5, 
+    isLoggingOut: false,
+    userType: '<%= locals.isOwner ? "owner" : "user" %>',
+    startCountdown() { 
+        this.countdown = 5; 
+        const timer = setInterval(() => { 
+            this.countdown--; 
+            if (this.countdown === 0) { 
+                clearInterval(timer); 
+                this.logout(); 
+            } 
+        }, 1000); 
+    }, 
+    logout() { 
+        this.isLoggingOut = true;
+        document.getElementById('logoutForm').submit(); 
+    } 
+}" x-on:keydown.escape.window="showLogoutModal = false; countdown = 5;">
+    <nav class="w-full flex justify-between items-center px-9 py-5 bg-white shadow-md sticky top-0 z-40">
         <!-- Error Message Box -->
-        <% if (error && error.length > 0) { %>
-            <div class="absolute top-5 left-1/2 -translate-x-1/2 p-3 rounded-md bg-red-500 font-[Poppins]">
-                <span class="inline-block mt-1 mb-1 text-white"><%= error[0] %></span>
+        <% if (typeof error !== 'undefined' && error.length > 0) { %>
+            <div class="absolute top-5 left-1/2 -translate-x-1/2 p-3 rounded-md bg-red-500">
+                <span class="text-white"><%= error[0] %></span>
             </div>
         <% } %>
         
         <!-- Logo -->
-        <h3 class="text-2xl font-semibold text-blue-400">Scatch</h3>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" class="w-[10rem]">
+            <defs>
+              <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <rect x="10" y="10" width="280" height="80" rx="40" fill="url(#grad)"/>
+            <circle cx="50" cy="50" r="30" fill="white"/>
+            <path d="M40 50 L60 50 M50 40 L50 60" stroke="#1e40af" stroke-width="4" stroke-linecap="round"/>
+            <text x="160" y="62" font-family="Arial, sans-serif" font-size="40" font-weight="bold" text-anchor="middle" fill="white">Scatch</text>
+        </svg>     
         
         <!-- Navigation Links -->
-        <% if (loggedIn) { %>
+        <% if (locals.loggedIn || locals.isOwner) { %>
             <div class="flex items-center gap-8 text-gray-700">
                 <a href="/" class="hover:text-gray-900 transition font-medium">Home</a>
                 <a href="/shop" class="hover:text-gray-900 transition font-medium">Shop</a>
                 <a href="/cart" class="hover:text-gray-900 transition font-medium">Cart</a>
                 <a href="/account" class="hover:text-gray-900 transition font-medium">My Account</a>
-                <a href="/users/logout" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300 font-medium">Logout</a>
+                <% if (locals.isOwner) { %>
+                    <a href="/owners/admin" class="hover:text-gray-900 transition font-medium">Admin</a>
+                <% } %>
+                <!-- Logout Button with Confirmation Modal Trigger -->
+                <button 
+                    @click="showLogoutModal = true; startCountdown();" 
+                    class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300 font-medium">
+                    Logout
+                </button>
             </div>
         <% } else { %>
             <div class="flex items-center gap-8 text-gray-700">
@@ -39,5 +92,87 @@
             </div>
         <% } %>
     </nav>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto mt-8 px-4">
+        <!-- Your main content goes here -->
+    </main>
+
+    <!-- Improved Logout Confirmation Modal -->
+    <div 
+        x-show="showLogoutModal" 
+        class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50" 
+        style="display: none;"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0">
+        
+        <div 
+            x-show="showLogoutModal" 
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 transform scale-95"
+            x-transition:enter-end="opacity-100 transform scale-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 transform scale-100"
+            x-transition:leave-end="opacity-0 transform scale-95"
+            @click.away="showLogoutModal = false; countdown = 5;"
+            class="bg-white rounded-lg shadow-xl w-96 p-6 relative"
+            x-trap.inert.noscroll="showLogoutModal">
+            
+            <!-- Close button -->
+            <button @click="showLogoutModal = false; countdown = 5;" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600" aria-label="Close">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <!-- Logout SVG Icon -->
+            <div class="flex justify-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+            </div>
+            <h3 class="text-2xl font-semibold mb-4 text-center text-gray-800">Ready to Leave?</h3>
+            <p class="text-gray-600 mb-6 text-center">Are you sure you want to end your current session?</p>
+            <p class="text-sm text-gray-500 mb-4 text-center">Auto-logout in <span x-text="countdown" class="font-bold text-blue-600"></span> seconds</p>
+            
+            <!-- Progress bar -->
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6 overflow-hidden">
+                <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-1000 ease-linear" x-bind:style="'width: ' + (countdown / 5 * 100) + '%'"></div>
+            </div>
+
+            <div class="flex justify-center gap-4">
+                <!-- Cancel Button -->
+                <button 
+                    @click="showLogoutModal = false; countdown = 5;" 
+                    class="px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition duration-300 focus:outline-none focus:ring-2 focus:ring-gray-300 font-medium">
+                    Cancel
+                </button>
+                <!-- Confirm Logout Button -->
+                <form id="logoutForm" x-bind:action="userType === 'owner' ? '/owners/logout' : '/users/logout'" method="GET">
+                    <button 
+                        type="button" 
+                        @click="logout()" 
+                        x-bind:disabled="isLoggingOut"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span x-show="!isLoggingOut">Confirm Logout</span>
+                        <span x-show="isLoggingOut" class="flex items-center">
+                            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Logging out...
+                        </span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- You can add your footer here if needed -->
+
 </body>
-</html>
+</html> 

@@ -9,80 +9,110 @@
                 <p><%= success %></p>
             </div>
         <% } %>
-
-        <!-- Page Title -->
+        <% if (isOwner) { %>
+                    <!-- Page Title -->
         <h1 class="text-4xl font-light text-center mb-12">Our Collection</h1>
 
         <!-- Filter and sort section -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <!-- Sort dropdown -->
-                <div class="mb-4 md:mb-0 w-full md:w-auto">
-                    <label for="sort" class="block text-sm font-medium text-gray-700 mb-2">Sort by:</label>
-                    <select id="sort" class="w-full md:w-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
-                        <option value="popular">Popular</option>
-                        <option value="newest">Newest</option>
-                        <option value="price-low-high">Price: Low to High</option>
-                        <option value="price-high-low">Price: High to Low</option>
-                    </select>
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8 w-full">
+            <form action="/shop" method="GET" id="shopForm">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+                    <!-- Sort dropdown -->
+                    <div class="mb-4 md:mb-0 w-full md:w-auto">
+                        <label for="sort" class="block text-sm font-medium text-gray-700 mb-2">Sort by:</label>
+                        <select id="sort" name="sortBy" class="w-full md:w-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5" onchange="this.form.submit()">
+                            <option value="">Select sorting option</option>
+                            <option value="popular" <%= sortBy === 'popular' ? 'selected' : '' %>>Popular</option>
+                            <option value="newest" <%= sortBy === 'newest' ? 'selected' : '' %>>Newest</option>
+                            <option value="price-low-high" <%= sortBy === 'price-low-high' ? 'selected' : '' %>>Price: Low to High</option>
+                            <option value="price-high-low" <%= sortBy === 'price-high-low' ? 'selected' : '' %>>Price: High to Low</option>
+                        </select>
+                    </div>
+                    <!-- Filter buttons -->
+                    <div class="space-y-2 md:space-y-0 md:space-x-4 w-full md:w-auto text-center">
+                        <button type="submit" name="newCollection" value="<%= newCollection === 'true' ? 'false' : 'true' %>" class="bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-gray-800 transition duration-300 w-full md:w-auto mb-2 md:mb-0 <%= newCollection === 'true' ? 'bg-gray-800' : '' %>">
+                            New Collection
+                        </button>
+                        <button type="submit" name="discounted" value="<%= discounted === 'true' ? 'false' : 'true' %>" class="bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-gray-800 transition duration-300 w-full md:w-auto <%= discounted === 'true' ? 'bg-gray-800' : '' %>">
+                            Discounted Products
+                        </button>
+                        <button type="submit" name="availability" value="<%= availability === 'true' ? 'false' : 'true' %>" class="bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-gray-800 transition duration-300 w-full md:w-auto <%= availability === 'true' ? 'bg-gray-800' : '' %>">
+                            Available Products
+                        </button>
+                        <button type="button" onclick="resetFilters()" class="bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-gray-800 transition duration-300 w-full md:w-auto mb-2 md:mb-0">
+                            Reset All Filters
+                        </button>
+                    </div>
                 </div>
-
-                <!-- Filter buttons -->
-                <div class="space-y-2 md:space-y-0 md:space-x-4 w-full md:w-auto text-center">
-                    <button class="bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-gray-800 transition duration-300 w-full md:w-auto mb-2 md:mb-0">
-                        New Collection
-                    </button>
-                    <button class="bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm hover:bg-gray-300 transition duration-300 w-full md:w-auto mb-2 md:mb-0">
-                        All Products
-                    </button>
-                    <button class="bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm hover:bg-gray-300 transition duration-300 w-full md:w-auto">
-                        Discounted Products
-                    </button>
+                <!-- Active filters display -->
+                <div class="flex flex-wrap gap-2 mb-4 ">
+                    <% if (newCollection === 'true') { %>
+                        <div class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center">
+                            New Collection
+                            <button type="submit" name="newCollection" value="false" class="ml-2 text-red-500 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    <% } %>
+                    <% if (discounted === 'true') { %>
+                        <div class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center">
+                            Discounted
+                            <button type="submit" name="discounted" value="false" class="ml-2 text-red-500 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    <% } %>
+                    <% if (availability === 'true') { %>
+                        <div class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center">
+                            Available
+                            <button type="submit" name="availability" value="false" class="ml-2 text-red-500 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    <% } %>
                 </div>
-            </div>
-
-            <!-- Additional Filters -->
-            <div class="mt-6 flex flex-wrap justify-center md:justify-start gap-4">
-                <button class="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <span>Availability</span>
-                    <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-                <button class="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <span>Discount</span>
-                    <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-                <button class="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <span>Price Range</span>
-                    <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-            </div>
+                <!-- Hidden inputs to retain filter values -->
+                <input type="hidden" name="priceMin" value="<%= priceMin %>">
+                <input type="hidden" name="priceMax" value="<%= priceMax %>">
+            </form>
         </div>
-
-        <!-- Product grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 px-6 m-[3rem]">
-            <% shopProduct.forEach(function(product) { %>
-                <div class="w-full rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1">
+        
+        
+        
+       <!-- Product grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 px-6 m-[0rem]">
+    <% shopProduct.forEach(function(product) { %>
+        <div class="w-full rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1">
+            <div class="relative">
+                <a href="/shop/product/<%= product._id %>" >
                     <div class="w-full h-52 flex items-center justify-center bg-[<%= product.bgcolor %>]">
                         <img class="h-[12rem]" src="data:image/jpeg;base64, <%= product.image.toString('base64') %>" alt="">
                     </div>
                     <div class="flex justify-between bg-[<%= product.pannelcolor %>] items-center px-4 py-4 font-sans text-[<%= product.textcolor %>]">
                         <div>
                             <h3><%= product.name %></h3>
-                            <h4>₹<%= product.price %></h4>
+                            <% if (product.discountedPrice && product.discountedPrice !== product.price && parseFloat(product.discountedPrice) < parseFloat(product.price)) { %>
+                                <h4 class="line-through text-gray-500"><%= product.formattedPrice %></h4>
+                                <h4 class="text-red-500"><%= typeof product.formattedDiscountedPrice === 'function' ? product.formattedDiscountedPrice() : product.formattedPrice(product.discountedPrice) %></h4>
+                            <% } else { %>
+                                <h4><%= product.formattedPrice %></h4>
+                            <% } %>
                         </div>
-                        <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="/addtocart/<%= product._id %>">
-                            <i class="ri-add-line"></i>
-                        </a>
-                    </div>
-                </div>
-            <% }) %>
+                </a>
+            </div>
+                <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="/addtocart/<%= product._id %>">
+                    <i class="ri-add-line"></i>
+                </a>
+            </div>
         </div>
+    <% }) %>
+</div>
 
         <!-- Pagination -->
         <div class="mt-12 flex justify-center">
@@ -108,7 +138,148 @@
                 </a>
             </nav>
         </div>
+        <% } else { %>
+                    <!-- Page Title -->
+        <h1 class="text-4xl font-light text-center mb-12">Our Collection</h1>
+
+        <!-- Filter and sort section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8 w-full">
+            <form action="/shop" method="GET" id="shopForm">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+                    <!-- Sort dropdown -->
+                    <div class="mb-4 md:mb-0 w-full md:w-auto">
+                        <label for="sort" class="block text-sm font-medium text-gray-700 mb-2">Sort by:</label>
+                        <select id="sort" name="sortBy" class="w-full md:w-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5" onchange="this.form.submit()">
+                            <option value="">Select sorting option</option>
+                            <option value="popular" <%= sortBy === 'popular' ? 'selected' : '' %>>Popular</option>
+                            <option value="newest" <%= sortBy === 'newest' ? 'selected' : '' %>>Newest</option>
+                            <option value="price-low-high" <%= sortBy === 'price-low-high' ? 'selected' : '' %>>Price: Low to High</option>
+                            <option value="price-high-low" <%= sortBy === 'price-high-low' ? 'selected' : '' %>>Price: High to Low</option>
+                        </select>
+                    </div>
+                    <!-- Filter buttons -->
+                    <div class="space-y-2 md:space-y-0 md:space-x-4 w-full md:w-auto text-center">
+                        <button type="submit" name="newCollection" value="<%= newCollection === 'true' ? 'false' : 'true' %>" class="bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-gray-800 transition duration-300 w-full md:w-auto mb-2 md:mb-0 <%= newCollection === 'true' ? 'bg-gray-800' : '' %>">
+                            New Collection
+                        </button>
+                        <button type="submit" name="discounted" value="<%= discounted === 'true' ? 'false' : 'true' %>" class="bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-gray-800 transition duration-300 w-full md:w-auto <%= discounted === 'true' ? 'bg-gray-800' : '' %>">
+                            Discounted Products
+                        </button>
+                        <button type="submit" name="availability" value="<%= availability === 'true' ? 'false' : 'true' %>" class="bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-gray-800 transition duration-300 w-full md:w-auto <%= availability === 'true' ? 'bg-gray-800' : '' %>">
+                            Available Products
+                        </button>
+                        <button type="button" onclick="resetFilters()" class="bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-gray-800 transition duration-300 w-full md:w-auto mb-2 md:mb-0">
+                            Reset All Filters
+                        </button>
+                    </div>
+                </div>
+                <!-- Active filters display -->
+                <div class="flex flex-wrap gap-2 mb-4 ">
+                    <% if (newCollection === 'true') { %>
+                        <div class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center">
+                            New Collection
+                            <button type="submit" name="newCollection" value="false" class="ml-2 text-red-500 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    <% } %>
+                    <% if (discounted === 'true') { %>
+                        <div class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center">
+                            Discounted
+                            <button type="submit" name="discounted" value="false" class="ml-2 text-red-500 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    <% } %>
+                    <% if (availability === 'true') { %>
+                        <div class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center">
+                            Available
+                            <button type="submit" name="availability" value="false" class="ml-2 text-red-500 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    <% } %>
+                </div>
+                <!-- Hidden inputs to retain filter values -->
+                <input type="hidden" name="priceMin" value="<%= priceMin %>">
+                <input type="hidden" name="priceMax" value="<%= priceMax %>">
+            </form>
+        </div>
+        
+        
+        
+       <!-- Product grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 px-6 m-[0rem]">
+    <% shopProduct.forEach(function(product) { %>
+        <div class="w-full rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1">
+
+                <a href="/shop/product/<%= product._id %>" >
+                    <div class="w-full h-52 flex items-center justify-center bg-[<%= product.bgcolor %>]">
+                        <img class="h-[12rem]" src="data:image/jpeg;base64, <%= product.image.toString('base64') %>" alt="">
+                    </div>
+                    <div class="flex justify-between bg-[<%= product.pannelcolor %>] items-center px-4 py-4 font-sans text-[<%= product.textcolor %>]">
+                        <div>
+                            <h3><%= product.name %></h3>
+                            <% if (product.discountedPrice && product.discountedPrice !== product.price && parseFloat(product.discountedPrice) < parseFloat(product.price)) { %>
+                                <h4 class="line-through text-gray-500"><%= product.formattedPrice %></h4>
+                                <h4 class="text-red-500"><%= typeof product.formattedDiscountedPrice === 'function' ? product.formattedDiscountedPrice() : product.formattedPrice(product.discountedPrice) %></h4>
+                            <% } else { %>
+                                <h4><%= product.formattedPrice %></h4>
+                            <% } %>
+                </a>
+            </div>
+                <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="/addtocart/<%= product._id %>">
+                    <i class="ri-add-line"></i>
+                </a>
+            </div>
+        </div>
+    <% }) %>
+</div>
+
+        <!-- Pagination -->
+        <div class="mt-12 flex justify-center">
+            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    <span class="sr-only">Previous</span>
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+                <a href="#" aria-current="page" class="z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 1 </a>
+                <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 2 </a>
+                <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium"> 3 </a>
+                <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700"> ... </span>
+                <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium"> 8 </a>
+                <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 9 </a>
+                <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 10 </a>
+                <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    <span class="sr-only">Next</span>
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+            </nav>
+        </div>
+       <% } %>
+ 
     </div>
 </div>
 
 <%- include('./partials/footer') %>
+<script>
+    function resetFilters() {
+    document.getElementById('sort').value = '';
+    document.getElementsByName('availability')[0].value = 'false';
+    document.getElementsByName('discounted')[0].value = 'false';
+    document.getElementsByName('newCollection')[0].value = 'false';
+    document.getElementsByName('priceMin')[0].value = '';
+    document.getElementsByName('priceMax')[0].value = '';
+    document.getElementById('shopForm').submit();
+}
+</script>
