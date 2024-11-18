@@ -3,7 +3,7 @@ const ownerModel = require("../models/owner-model");
 const bcrypt = require("bcrypt");
 const { generateToken } = require('../utils/generateToken');
 const { generateTokenOwner } = require('../utils/generateTokenOwner');
-const { generateOTP, sendOTP } = require('../utils/otp');
+const { generateOTP, sendOTP, getSecret } = require('../utils/otp');
 const speakeasy = require('speakeasy')
 
 module.exports.registeredUser = async function (req, res) {
@@ -57,6 +57,8 @@ module.exports.verifyOTP = async function (req, res) {
 
       // Log the values for debugging
       console.log('Email:', email, 'OTP Provided:', otp, 'Stored OTP:', user ? user.otp : 'None', 'Expires:', user ? user.otpExpires : 'None');
+
+      const secret = getSecret();
       const isValid = speakeasy.totp.verify({
         secret: secret,
         encoding: 'base32',

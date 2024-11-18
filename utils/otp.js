@@ -5,15 +5,16 @@ const nodemailer = require('nodemailer');
 let secret;
 
 const generateOTP = () => {
-  if (!secret) {
-    secret = speakeasy.generateSecret().base32
-  }
+  secret = speakeasy.generateSecret().base32;
+
   return speakeasy.totp({
     secret: secret, // Use the generated secret
     encoding: 'base32', // Specify encoding
     digits: 6
   });
 };
+
+const getSecret = () => secret;
 
 const sendOTP = async (email, otp) => {
     let transporter = nodemailer.createTransport({
@@ -34,4 +35,4 @@ const sendOTP = async (email, otp) => {
     await transporter.sendMail(mailOptions);
   };
 
-module.exports = { generateOTP, sendOTP };
+module.exports = { generateOTP, sendOTP, getSecret };
