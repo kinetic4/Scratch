@@ -6,7 +6,7 @@ const flash = require('connect-flash');
 const expressSession = require('express-session');
 
 const db = require('./config/mongoose-connection');
-
+const cors = require('cors')
 const indexRouter = require('./routes/index');
 const ownersRouter = require('./routes/ownersRouter');
 const productsRouter = require('./routes/productsRouter');
