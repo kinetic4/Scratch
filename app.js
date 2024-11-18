@@ -21,7 +21,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 
 // Middleware
-app.use(express.json());
+app.use(express.json());  
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -30,7 +30,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 const sessionSecret = process.env.JWT_KEY;
 if (!sessionSecret) {
   console.error('EXPRESS_SESSION_SECRET is not set. Please set this environment variable.');
-  process.exit(1);
+  if (process.env.NODE_ENV !== 'production') {
+    process.exit(1);
+  }
 }
 
 app.use(
@@ -47,6 +49,15 @@ app.use(
 
 app.use(flash());
 
+app.use((req, res, next) => {
+  res.set({
+    'X-Frame-Options': 'DENY',
+    'X-Content-Type-Options': 'nosniff',
+    'X-XSS-Protection': '1; mode=block'
+  });
+  next();
+})
+
 // Routes
 app.use('/', indexRouter);
 app.use('/owners', ownersRouter);
@@ -60,7 +71,11 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 
+app.get('/health', (req, res) => {
+  res.status(200).json({status: 'ok'})
+})
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
 });
