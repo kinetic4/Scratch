@@ -48,6 +48,14 @@ app.use(
   })
 );
 
+app.use (cors({
+  origin: 'https://scratch-production-aee5.up.railway.app/'
+}))
+
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
 app.use(flash());
 
 app.use((req, res, next) => {

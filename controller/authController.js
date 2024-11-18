@@ -18,6 +18,8 @@ module.exports.registeredUser = async function (req, res) {
       return res.redirect("/signup");
     }
 
+    
+
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
     console.log("Password hashed");
@@ -51,9 +53,21 @@ module.exports.registeredUser = async function (req, res) {
 
 module.exports.verifyOTP = async function (req, res) {
   try {
+    console.log('VERIFICATION ENVIRONMENT:', {
+        NODE_ENV: process.env.NODE_ENV,
+        sessionID: req.sessionID,
+        fullSession: JSON.stringify(req.session)
+    })
       const email = req.session.verificationEmail; // Get email from session
+      console.log('Verification Session Details:', {
+        retrievedEmail: email,
+        sessionKeys: Object.keys(req.session)
+      });
       const { otp } = req.body;
+
       const user = await userModel.findOne({ email });
+      console.log("User found:", user);
+
 
       // Log the values for debugging
       console.log('Email:', email, 'OTP Provided:', otp, 'Stored OTP:', user ? user.otp : 'None', 'Expires:', user ? user.otpExpires : 'None');
