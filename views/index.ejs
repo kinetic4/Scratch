@@ -2,7 +2,7 @@
 <%- include('./partials/header') %>
 
 
-<div class="bg-gray-100 min-h-screen font-sans">
+<div class="bg-gray-100 min-h-screen font-sans mt-[-2rem]">
     <main>
        
         <section x-data="{ 
@@ -28,7 +28,7 @@
                 }
             ]
         }" class="relative overflow-hidden">
-            <div class="relative h-[56rem]">
+            <div class="relative h-[62rem]">
                 <template x-for="(slide, index) in slides" :key="index">
                     <div x-show="currentSlide === index" 
                          x-transition:enter="transition ease-out duration-300"
