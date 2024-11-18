@@ -5,6 +5,9 @@ const nodemailer = require('nodemailer');
 const secret = speakeasy.generateSecret().base32;
 
 const generateOTP = () => {
+  if (!secret) {
+    secret = speakeasy.generateSecret().base32
+  }
   return speakeasy.totp({
     secret: secret, // Use the generated secret
     encoding: 'base32', // Specify encoding

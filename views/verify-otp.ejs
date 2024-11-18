@@ -44,24 +44,21 @@
 
 <%- include('./partials/footer') %>
 <script>
-    document.getElementById('otpForm').addEventListener('submit', function(event) {
-        const otpFields = document.querySelectorAll('input[name^="otp"]');
-        let otp = '';
-        otpFields.forEach(field => {
-            otp += field.value;
-        });
-        
-        if (otp.length === otpFields.length) {
-            const otpInput = document.createElement('input');
-            otpInput.type = 'hidden';
-            otpInput.name = 'otp'; 
-            otpInput.value = otp;
-            this.appendChild(otpInput);
-        } else {
-            event.preventDefault(); 
-            alert("Please complete all OTP fields.");
-        }
-    });
+document.getElementById('otpForm').addEventListener('submit', function(event) {
+    const otpFields = document.querySelectorAll('input[name^="otp"]');
+    let otp = Array.from(otpFields).map(field => field.value).join('');
+    
+    if (otp.length === otpFields.length) {
+        const otpInput = document.createElement('input');
+        otpInput.type = 'hidden';
+        otpInput.name = 'otp'; 
+        otpInput.value = otp;
+        this.appendChild(otpInput);
+    } else {
+        event.preventDefault(); 
+        alert("Please complete all OTP fields.");
+    }
+});
 
     const otpInputs = document.querySelectorAll('.otp-input');
     otpInputs.forEach((input, index) => {

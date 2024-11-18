@@ -56,10 +56,16 @@ module.exports.verifyOTP = async function (req, res) {
 
       // Log the values for debugging
       console.log('Email:', email, 'OTP Provided:', otp, 'Stored OTP:', user ? user.otp : 'None', 'Expires:', user ? user.otpExpires : 'None');
-
-      if (!user || user.otp !== otp || user.otpExpires < new Date()) {
-          req.flash("error", "Invalid or expired OTP");
-          return res.redirect('/verify-otp');
+      const isValid = speakeasy.totp.verify({
+        secret: secret,
+        encoding: 'base32',
+        token: otp,
+        window: 1  // Allows slight time drift
+      });
+      
+      if (!user || !isValid || user.otpExpires < new Date()) {
+        req.flash("error", "Invalid or expired OTP");
+        return res.redirect('/verify-otp');
       }
 
       // Clear OTP fields after successful verification
