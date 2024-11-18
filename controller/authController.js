@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const { generateToken } = require('../utils/generateToken');
 const { generateTokenOwner } = require('../utils/generateTokenOwner');
 const { generateOTP, sendOTP } = require('../utils/otp');
+const speakeasy = require('speakeasy')
 
 module.exports.registeredUser = async function (req, res) {
   try {
