@@ -46,82 +46,39 @@ module.exports.registeredUser = async function (req, res) {
   }
 };
 
-module.exports.sendOTPController = async function (req, res) {
-    try {
-      const { email } = req.body;
-      const user = await userModel.findOne({ email });
-  
-      if (!user) {
-        req.flash('error', 'Email not registered');
-        return res.redirect('/register');
-      }
-  
-      // Generate OTP and secret
-      const { secret, otp } = generateOTP();
-      const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // Set OTP expiration (10 mins)
-  
-      // Save to user model
-      user.otp = otp;
-      user.secret = secret; // Save the secret for validation
-      user.otpExpires = otpExpires;
-      await user.save();
-  
-      // Send OTP
-      await sendOTP(email, otp);
-  
-      // Save email in session
-      req.session.verificationEmail = email;
-  
-      res.redirect('/verify-otp');
-    } catch (error) {
-      console.error('Error sending OTP:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  };
 
-  module.exports.verifyOTP = async function (req, res) {
-    try {
-      const email = req.session.verificationEmail;
+
+module.exports.verifyOTP = async function (req, res) {
+  try {
+      const email = req.session.verificationEmail; // Get email from session
       const { otp } = req.body;
       const user = await userModel.findOne({ email });
-  
-      if (!user) {
-        req.flash('error', 'Invalid session or user not found');
-        return res.redirect('/verify-otp');
+
+      // Log the values for debugging
+      console.log('Email:', email, 'OTP Provided:', otp, 'Stored OTP:', user ? user.otp : 'None', 'Expires:', user ? user.otpExpires : 'None');
+
+      if (!user || user.otp !== otp || user.otpExpires < new Date()) {
+          req.flash("error", "Invalid or expired OTP");
+          return res.redirect('/verify-otp');
       }
-  
-      // Verify OTP using the saved secret
-      const isValid = speakeasy.totp.verify({
-        secret: user.secret,
-        encoding: 'base32',
-        token: otp,
-        window: 1 // Allow +/- 1 time step for clock drift
-      });
-  
-      // Check if the OTP has expired
-      if (!isValid || user.otpExpires < new Date()) {
-        req.flash('error', 'Invalid or expired OTP');
-        return res.redirect('/verify-otp');
-      }
-  
-      // Clear OTP and secret after successful verification
+
+      // Clear OTP fields after successful verification
       user.otp = undefined;
-      user.secret = undefined;
       user.otpExpires = undefined;
       await user.save();
-  
-      // Clear session
+
+      // Clear email from session
       delete req.session.verificationEmail;
-  
-      // Generate token
-      const token = generateToken(user);
+
+      // Generate and send the token
+      let token = generateToken(user);
       res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
       res.redirect('/shop');
-    } catch (error) {
+  } catch (error) {
       console.error('Error verifying user OTP:', error);
       res.status(500).json({ message: 'Internal server error' });
-    }
-  };
+  }
+};
 
 module.exports.loginUser = async (req, res) => {
   try {
