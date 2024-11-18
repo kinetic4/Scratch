@@ -11,7 +11,8 @@ const indexRouter = require('./routes/index');
 const ownersRouter = require('./routes/ownersRouter');
 const productsRouter = require('./routes/productsRouter');
 const usersRouter = require('./routes/usersRouter');
-const checkoutRouter = require('./routes/checkout')
+const checkoutRouter = require('./routes/checkout');
+const { default: mongoose } = require('mongoose');
 
 const app = express();
 
@@ -31,7 +32,7 @@ const sessionSecret = process.env.JWT_KEY;
 if (!sessionSecret) {
   console.error('EXPRESS_SESSION_SECRET is not set. Please set this environment variable.');
   if (process.env.NODE_ENV !== 'production') {
-    process.exit(1);
+    mongoose.set('debug', true);
   }
 }
 
