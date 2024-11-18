@@ -6,7 +6,6 @@ const flash = require('connect-flash');
 const expressSession = require('express-session');
 
 const db = require('./config/mongoose-connection');
-const cors = require('cors')
 const indexRouter = require('./routes/index');
 const ownersRouter = require('./routes/ownersRouter');
 const productsRouter = require('./routes/productsRouter');
@@ -48,9 +47,7 @@ app.use(
   })
 );
 
-app.use (cors({
-  origin: 'https://scratch-production-aee5.up.railway.app/'
-}))
+
 
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
