@@ -2,7 +2,7 @@ const speakeasy = require('speakeasy');
 const nodemailer = require('nodemailer');
 
 // Generate a new secret for OTP
-const secret = speakeasy.generateSecret().base32;
+let secret;
 
 const generateOTP = () => {
   if (!secret) {
