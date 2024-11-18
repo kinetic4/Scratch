@@ -90,15 +90,15 @@ app.get('/health', async (req, res) => {
     res.status(500).json({ status: 'error', error: error.message });
   }
 });
-db.once('open', () => {
-  console.log('Database connected successfully');
+
+
+
+
   
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
   });
-});
 
-db.on('error', (err) => {
-  console.error('Database connection error:', err);
-});
+
+
