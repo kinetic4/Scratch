@@ -15,7 +15,7 @@ const ownerSchema = mongoose.Schema({
     otpExpires: {
       type: Date
     },
-    contactNo: Number,
+    contact: Number,
     address: String,
     products: {
         type: Array,
