@@ -176,16 +176,34 @@ module.exports.registerOwner = async function (req, res) {
 
 module.exports.verifyOwnerOTP = async function (req, res) {
 try {
-    const email = req.session.ownerVerificationEmail; // Get email from session
+  console.log('VERIFICATION ENVIRONMENT:', {
+    NODE_ENV: process.env.NODE_ENV,
+    sessionID: req.sessionID,
+    fullSession: JSON.stringify(req.session)
+})
+  const email = req.session.ownerVerificationEmail; // Get email from session
+  console.log('Verification Session Details:', {
+    retrievedEmail: email,
+    sessionKeys: Object.keys(req.session)
+  });
     const { otp } = req.body;
     const owner = await ownerModel.findOne({ email });
+    console.log('owner found', owner)
 
     // Log the values for debugging
     console.log('Email:', email, 'OTP Provided:', otp, 'Stored OTP:', owner ? owner.otp : 'None', 'Expires:', owner ? owner.otpExpires : 'None');
 
-    if (!owner || owner.otp !== otp || owner.otpExpires < new Date()) {
-        req.flash("error", "Invalid or expired OTP");
-        return res.redirect('/owners/verify-otp');
+    const secret = getSecret();
+    const isValid = speakeasy.totp.verify({
+      secret: secret,
+      encoding: 'base32',
+      token: otp,
+      window: 1  // Allows slight time drift
+    });
+
+    if (!owner || !isValid || owner.otpExpires < new Date()) {
+      req.flash("error", "Invalid or expired OTP");
+      return res.redirect('/owners/verify-otp');
     }
 
     // Clear OTP fields after successful verification

@@ -1,57 +1,143 @@
-<%- include('./partials/header') %>
-<% if (error && error.length > 0) { %>
-    <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-red-500 font-[Poppins]">
-        <span class="inline-block mt-1 mb-1 text-white">
-            <%= Array.isArray(error) ? error[0] : error %>
-        </span>
-    </div>
+<%- include('./partials/header') %> <% if (error && error.length > 0) { %>
+<div
+  class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-red-500 font-[Poppins]"
+>
+  <span class="inline-block mt-1 mb-1 text-white">
+    <%= Array.isArray(error) ? error[0] : error %>
+  </span>
+</div>
 <% } %>
-<div class="bg-gray-100 min-h-screen font-[Poppins] flex items-center justify-center mt-[-2rem]">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">         
-        <!-- Switch Toggle -->
-        <div class="flex justify-center mb-4">
-            <label for="toggle" class="inline-flex items-center cursor-pointer">
-                <span class="mr-2 text-gray-700 font-semibold">User</span>
-                <input type="checkbox" id="toggle" class="hidden" onchange="toggleRole()" <%= isOwnerAuth ? 'checked' : '' %>>
-                <div class="w-12 h-6 rounded-full shadow-inner relative transition duration-300 peer 
-                <%= isOwnerAuth ? 'bg-blue-500' : 'bg-gray-300' %>">
-                <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md 
-                    transition-transform duration-300 
-                    <%= isOwnerAuth ? 'translate-x-6' : '' %>">
-                </div>
-            </div>
-                <span class="ml-2 text-gray-700 font-semibold">Owner</span>
-            </label>
+<div
+  class="bg-[url('https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=3269&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center min-h-screen font-[Poppins] flex items-center justify-center mt-[-2rem]"
+>
+  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    <!-- Switch Toggle -->
+    <div class="flex justify-center mb-4">
+      <label for="toggle" class="inline-flex items-center cursor-pointer">
+        <span class="mr-2 text-gray-700 font-semibold">User</span>
+        <input type="checkbox" id="toggle" class="hidden"
+        onchange="toggleRole()" <%= isOwnerAuth ? 'checked' : '' %>>
+        <div
+          class="w-12 h-6 rounded-full shadow-inner relative transition duration-300 peer <%= isOwnerAuth ? 'bg-blue-500' : 'bg-gray-300' %>"
+        >
+          <div
+            class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 <%= isOwnerAuth ? 'translate-x-6' : '' %>"
+          ></div>
         </div>
-        <div class="w-full flex justify-between items-center px-10 py-5">
-            <h3 class="text-2xl font-[Poppins]"><%= isOwnerAuth ? 'Owner Signup' : 'User Signup' %> to <span class="text-blue-400 font-semibold font-sans">Scatch</span></h3>
-        </div>
-        <form action="<%= isOwnerAuth ? '/owners/create' : '/users/register' %>" method="post">
-            <div class="mb-4">
-                <label for="fullname" class="block text-gray-700 font-semibold mb-2">Full Name</label>
-                <input type="text" id="fullname" name="fullname" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400" required>
-            </div>
-            <div class="mb-4">
-                <label for="email" class="block text-gray-700 font-semibold mb-2">Email</label>
-                <input type="email" id="email" name="email" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400" required>
-            </div>
-            <div class="mb-6">
-                <label for="password" class="block text-gray-700 font-semibold mb-2">Password</label>
-                <input type="password" id="password" name="password" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400" required>
-            </div>
-            <button type="submit" class="w-full bg-blue-400 text-white py-3 rounded-md font-semibold transition duration-300">Create Account</button>
-        </form>
-        <% if (!isOwnerAuth) { %>
-            <div class="mt-6 text-center">
-                <p>Already have an account? <a href="/login" class="text-blue-500 hover:text-blue-600">Login</a></p>
-            </div>
-        <% } %>
+        <span class="ml-2 text-gray-700 font-semibold">Owner</span>
+      </label>
     </div>
+    <div class="w-full flex justify-between items-center px-10 py-5">
+      <h3 class="text-2xl font-[Poppins]">
+        <%= isOwnerAuth ? 'Owner Signup' : 'User Signup' %> to
+        <span class="text-blue-400 font-semibold font-sans">Scatch</span>
+      </h3>
+    </div>
+    <form
+      action="<%= isOwnerAuth ? '/owners/create' : '/users/register' %>"
+      method="post"
+    >
+      <div class="mb-4">
+        <label for="fullname" class="block text-gray-700 font-semibold mb-2"
+          >Full Name</label
+        >
+        <input
+          type="text"
+          id="fullname"
+          name="fullname"
+          class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
+          required
+        />
+      </div>
+      <div class="mb-4">
+        <label for="email" class="block text-gray-700 font-semibold mb-2"
+          >Email</label
+        >
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
+          required
+        />
+      </div>
+      <div class="mb-6 relative">
+        <label for="password" class="block text-gray-700 font-semibold mb-2"
+          >Password</label
+        >
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
+          required
+        />
+        <button
+        type="button"
+        onclick="togglePassword()"
+        class="absolute right-3 top-9 bg-transparent p-1 text-gray-600"
+        aria-label="Toggle password visibility"
+      >
+        <!-- Eye Open Icon -->
+        <svg id="eyeOpen" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 15 15"><path fill="currentColor" fill-rule="evenodd" d="M7.5 11c-2.697 0-4.97-1.378-6.404-3.5C2.53 5.378 4.803 4 7.5 4s4.97 1.378 6.404 3.5C12.47 9.622 10.197 11 7.5 11m0-8C4.308 3 1.656 4.706.076 7.235a.5.5 0 0 0 0 .53C1.656 10.294 4.308 12 7.5 12s5.844-1.706 7.424-4.235a.5.5 0 0 0 0-.53C13.344 4.706 10.692 3 7.5 3m0 6.5a2 2 0 1 0 0-4a2 2 0 0 0 0 4" clip-rule="evenodd"/></svg>
+        <!-- Eye Closed Icon -->
+        <svg
+      id="eyeClosed"
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-5 h-5 hidden"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+    <path fill="currentColor" d="M12 17.5c-3.8 0-7.2-2.1-8.8-5.5H1c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5h-2.2c-1.6 3.4-5 5.5-8.8 5.5"/>
+    </svg>
+      </button>
+      </div>
+      <button
+        type="submit"
+        class="w-full bg-blue-400 text-white py-3 rounded-md font-semibold transition duration-300"
+      >
+        Create Account
+      </button>
+    </form>
+    <% if (!isOwnerAuth) { %>
+    <div class="mt-6 text-center">
+      <p>
+        Already have an account?
+        <a href="/login" class="text-blue-500 hover:text-blue-600">Login</a>
+      </p>
+    </div>
+    <% } else { %> <% if (!loggedIn) { %>
+        <div class="mt-6 text-center">
+            <p>
+              Already have an account?
+              <a href="/login" class="text-blue-500 hover:text-blue-600">Login</a>
+            </p>
+          </div>
+        <% } %> <% } %>
+  </div>
 </div>
 <%- include('./partials/footer') %>
 
 <script>
-    function toggleRole() {
-        window.location.href = "<%= isOwnerAuth ? '/signup' : '/owners/signup' %>";
+  function toggleRole() {
+    window.location.href = "<%= isOwnerAuth ? '/signup' : '/owners/signup' %>";
+  }
+
+  function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const eyeOpen = document.getElementById('eyeOpen');
+    const eyeClosed = document.getElementById('eyeClosed');
+
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      eyeOpen.classList.add('hidden');
+      eyeClosed.classList.remove('hidden');
+    } else {
+      passwordInput.type = 'password';
+      eyeOpen.classList.remove('hidden');
+      eyeClosed.classList.add('hidden');
     }
+  }
 </script>

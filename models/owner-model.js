@@ -16,6 +16,7 @@ const ownerSchema = mongoose.Schema({
       type: Date
     },
     contactNo: Number,
+    address: String,
     products: {
         type: Array,
         default: []
