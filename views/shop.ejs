@@ -89,7 +89,6 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 px-6 m-[0rem]">
     <% shopProduct.forEach(function(product) { %>
         <div class="w-full rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1">
-            <div class="relative">
                 <a href="/shop/product/<%= product._id %>" >
                     <div class="w-full h-52 flex items-center justify-center bg-[<%= product.bgcolor %>]">
                         <img class="h-[12rem]" src="data:image/jpeg;base64, <%= product.image.toString('base64') %>" alt="">
@@ -103,9 +102,8 @@
                             <% } else { %>
                                 <h4><%= product.formattedPrice %></h4>
                             <% } %>
-                        </div>
-                </a>
-            </div>
+                        </a>
+                    </div>
                 <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="/addtocart/<%= product._id %>">
                     <i class="ri-add-line"></i>
                 </a>
