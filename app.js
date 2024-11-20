@@ -14,6 +14,7 @@ const checkoutRouter = require('./routes/checkout');
 const chatRouter = require('./routes/chatRouter')
 const { default: mongoose } = require('mongoose');
 const ResponseHandler = require('./utils/responseHandle');
+const MongoStore = require('connect-mongo')
 
 const app = express();
 
@@ -42,6 +43,9 @@ app.use(
     secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: 'mongodb+srv://pratyushbhargava6:az3CycSvzhmLyYfB@cluster0.wcg4j.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+    }),
     cookie: { 
       secure: process.env.NODE_ENV === 'production',
       httpOnly: true
