@@ -1,0 +1,221 @@
+<%- include('./partials/header') %>
+
+<div class="chat-wrapper max-w-lg mx-auto min-h-screen flex flex-col">
+    <!-- Add Clear History Button -->
+    <div class="flex justify-end p-2">
+        <button 
+            id="clear-history-btn" 
+            class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition"
+            >
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48"><g fill="none" stroke-linejoin="round" stroke-width="4"><path fill="#2f88ff" stroke="#000" d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z"/><path stroke="#fff" stroke-linecap="round" d="M24 16V32"/><path stroke="#fff" stroke-linecap="round" d="M16 24L32 24"/></g></svg>
+                    </div>
+
+    <div id="chat-container" class="flex-grow p-4 overflow-y-auto" aria-live="polite">
+        <% if (typeof messages !== 'undefined' && messages.length > 0) { %>
+            <% messages.forEach(function(msg) { %>
+                <div 
+                    class="message mb-4 flex <%= msg.role === 'user' ? 'justify-end' : 'justify-start' %>"
+                    role="article"
+                    aria-label="<%= msg.role %> message"
+                >
+                    <div class="
+                        <%= msg.role === 'user' ? 'bg-blue-100 text-right' : 'bg-gray-100' %> 
+                        p-3 rounded-lg max-w-[70%]
+                        relative group
+                    ">
+                        <p class="text-sm break-words"><%= msg.content %></p>
+                        <span 
+                            class="text-xs text-gray-500 mt-1 block" 
+                            aria-label="Message timestamp"
+                        >
+                            <%= new Date(msg.timestamp).toLocaleTimeString() %>
+                        </span>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <div 
+                id="welcome-message" 
+                class="text-center text-gray-500 py-10"
+                aria-live="polite"
+            >
+                <i class="fas fa-comment-dots text-4xl mb-4 text-blue-500" aria-hidden="true"></i>
+                <p>Welcome! Start a conversation with me.</p>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Typing Indicator -->
+    <div 
+        id="typing-indicator" 
+        class="hidden p-4 text-gray-500" 
+        aria-live="polite"
+    >
+        <span class="typing-indicator" aria-label="Typing">...</span> Bot is typing
+    </div>
+
+    <!-- Message Input Area -->
+    <div class="p-4 bg-gray-100 border-t">
+        <form 
+            id="message-form" 
+            class="flex"
+            aria-label="Message input form"
+        >
+            <input 
+                type="text" 
+                id="message-input" 
+                placeholder="Type your message..." 
+                class="flex-grow p-3 rounded-l-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+                aria-required="true"
+            >
+            <button 
+                type="submit" 
+                class="bg-blue-500 text-white px-4 rounded-r-lg hover:bg-blue-600 transition"
+                aria-label="Send message"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512">
+                    <path fill="currentColor" d="M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2"/>
+                </svg>
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('message-form');
+        const input = document.getElementById('message-input');
+        const chatContainer = document.getElementById('chat-container');
+        const typingIndicator = document.getElementById('typing-indicator');
+        const clearHistoryBtn = document.getElementById('clear-history-btn');
+        const welcomeMessage = document.getElementById('welcome-message');
+
+        // Scroll to bottom on page load
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        function showTypingIndicator() {
+            typingIndicator.classList.remove('hidden');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            typingIndicator.classList.add('hidden');
+        }
+
+        function appendMessage(role, content, timestamp = null) {
+            // Remove welcome message if it exists
+            if (welcomeMessage) {
+                welcomeMessage.remove();
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', 'mb-4', 'flex', role === 'user' ? 'justify-end' : 'justify-start');
+            
+            const displayTime = timestamp ? new Date(timestamp).toLocaleTimeString() : new Date().toLocaleTimeString();
+            
+            messageDiv.innerHTML = `
+                <div class="${role === 'user' ? 'bg-blue-100 text-right' : 'bg-gray-100'} p-3 rounded-lg max-w-[70%]">
+                    <p class="text-sm">${content}</p>
+                    <span class="text-xs text-gray-500 mt-1 block">${displayTime}</span>
+                </div>
+            `;
+
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            input.value = '';
+            appendMessage('user', message);
+            showTypingIndicator();
+
+            try {
+                const response = await fetch('/chat/message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message })
+                });
+
+                const data = await response.json();
+                hideTypingIndicator();
+
+                if (data.success) {
+                    appendMessage('bot', data.data.botMessage.content, data.data.botMessage.timestamp);
+                } else {
+                    appendMessage('bot', 'Sorry, something went wrong.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                hideTypingIndicator();
+                appendMessage('bot', 'Sorry, there was a network error.');
+            }
+        });
+
+        // Clear history functionality
+        clearHistoryBtn.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/chat/history', {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Clear chat container
+                    chatContainer.innerHTML = `
+                        <div id="welcome-message" class="text-center text-gray-500 py-10">
+                            <i class="fas fa-comment-dots text-4xl mb-4 text-blue-500"></i>
+                            <p>Start a new conversation!</p>
+                        </div>
+                    `;
+                } else {
+                    alert('Failed to clear chat history');
+                }
+            } catch (error) {
+                console.error('Error clearing history:', error);
+                alert('Error clearing chat history');
+            }
+        });
+    });
+</script>
+
+
+<style>
+    #chat-container {
+        scroll-behavior: smooth;
+        max-height: 70vh; /* More responsive height */
+
+    }
+    /* Custom scrollbar */
+    #chat-container::-webkit-scrollbar {
+        width: 6px;
+    }
+    #chat-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    #chat-container::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+    }
+    #chat-container::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+    .typing-indicator {
+        display: inline-block;
+        animation: typing 1.4s infinite;
+    }
+    @keyframes typing {
+        0%, 100% { opacity: 0.4; }
+        50% { opacity: 1; }
+    }
+</style>
+
+<%- include('./partials/footer') %>

@@ -11,7 +11,9 @@ const ownersRouter = require('./routes/ownersRouter');
 const productsRouter = require('./routes/productsRouter');
 const usersRouter = require('./routes/usersRouter');
 const checkoutRouter = require('./routes/checkout');
+const chatRouter = require('./routes/chatRouter')
 const { default: mongoose } = require('mongoose');
+const ResponseHandler = require('./utils/responseHandle');
 
 const app = express();
 
@@ -70,11 +72,12 @@ app.use('/owners', ownersRouter);
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
 app.use('/checkout', checkoutRouter)
+app.use('/chatbot', chatRouter)
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  return ResponseHandler.error( res, err, 500)
 });
 
 app.get('/health', async (req, res) => {

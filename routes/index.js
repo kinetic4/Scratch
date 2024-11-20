@@ -5,7 +5,8 @@ const productModel = require("../models/product-model");
 const userModel = require("../models/user-model");
 const ownerModel = require("../models/owner-model");
 const { model } = require("mongoose");
-const { verifyOTP, verifyOwnerOTP } = require('../controller/authController')
+const { verifyOTP, verifyOwnerOTP } = require('../controller/authController');
+const ChatService = require("../services/chatService");
 
 router.get("/", async function (req, res) {
   let error = req.flash("error");
@@ -394,4 +395,6 @@ router.get("/addtocart/:productid", isLoggedIn, async function (req, res) {
 router.get("logout", isLoggedIn, function (req, res) {
   res.render("shop");
 });
+
+
 module.exports = router;
