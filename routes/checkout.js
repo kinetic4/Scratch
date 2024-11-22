@@ -103,7 +103,7 @@ router.post("/create-order", isLoggedIn, validateOrder, async (req, res) => {
       order = await razorpay.orders.create({
         amount: amountInPaise,
         currency: CURRENCY,
-        receipt: `order_${Date.now()}_${user._id}`,
+        receipt: `order_${user._id.toString().slice(-20)}`, // Truncate to ensure under 40 chars
         payment_capture: 1,
         notes: {
           userId: user._id.toString(),
@@ -148,6 +148,9 @@ router.post("/create-order", isLoggedIn, validateOrder, async (req, res) => {
   } catch (error) {
     await session.abortTransaction();
     console.error("Checkout Error:", error);
+    if (session.inTransaction()) {
+      await session.abortTransaction();
+    }
     res.status(500).json({
       error: "An error occurred during checkout",
       details: process.env.NODE_ENV === "development" ? error.message : undefined,

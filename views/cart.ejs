@@ -128,7 +128,9 @@
 
 <%- include('./partials/footer') %>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
+<script> 
+      const validProducts = JSON.parse('<%- JSON.stringify(validProducts) %>');
+</script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const checkoutBtn = document.getElementById('razorpay-checkout-btn');
@@ -188,6 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Razorpay checkout
+ 
     if (checkoutBtn) {
         checkoutBtn.onclick = async function(e) {
             e.preventDefault();
@@ -198,7 +201,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
+                    body: JSON.stringify({ 
+                        cart: validProducts.map(product => ({
+                            productId: product._id,
+                            quantity: product.quantity,
+                            price: product.price,
+                            discount: product.discount || 0
+                        }))
+                    })
                 });
+                
                 
                 if (!response.ok) {
                     const errorData = await response.json();
