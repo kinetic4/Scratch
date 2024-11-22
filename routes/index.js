@@ -392,6 +392,19 @@ router.get("/addtocart/:productid", isLoggedIn, async function (req, res) {
   res.redirect("/shop");
 });
 
+router.get('/order-confirmation', isLoggedIn, async (req, res) => {
+  try {
+    const latestOrder = await Order.findOne({ 
+      userId: req.user._id, 
+      status: 'PAID' 
+    }).sort({ createdAt: -1 });
+
+    res.render('order-confirmation', { order: latestOrder });
+  } catch (error) {
+    res.status(500).render('error', { error: 'Failed to fetch order details' });
+  }
+});
+
 router.get("logout", isLoggedIn, function (req, res) {
   res.render("shop");
 });

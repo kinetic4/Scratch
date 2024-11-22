@@ -45,7 +45,7 @@
         document.getElementById('logoutForm').submit(); 
     } 
 }" x-on:keydown.escape.window="showLogoutModal = false; countdown = 5;">
-    <nav class="w-full flex justify-between items-center px-9 py-5 bg-white shadow-md sticky top-0 z-40">
+    <nav class="w-full flex justify-between items-center px-9 py-5 bg-[#343333] shadow-md sticky top-0 z-40 ">
         <!-- Error Message Box -->
         <% if (typeof error !== 'undefined' && error.length > 0) { %>
             <div class="absolute top-5 left-1/2 -translate-x-1/2 p-3 rounded-md bg-red-500">
@@ -67,14 +67,14 @@
         </a>
         <!-- Navigation Links -->
         <% if (locals.loggedIn || locals.isOwner) { %>
-            <div class="flex items-center gap-8 text-gray-700">
-                <a href="/" class="hover:text-gray-900 transition font-medium">Home</a>
-                <a href="/shop" class="hover:text-gray-900 transition font-medium">Shop</a>
-                <a href="/cart" class="hover:text-gray-900 transition font-medium">Cart</a>
-                <a href="/account" class="hover:text-gray-900 transition font-medium">My Account</a>
-                <a href="/chatbot/chat" class="hover:text-gray-900 transition font-medium">Contact Us</a>
+            <div class="flex items-center gap-8 text-white">
+                <a href="/" class="hover:text-white transition font-medium">Home</a>
+                <a href="/shop" class="hover:text-white transition font-medium">Shop</a>
+                <a href="/cart" class="hover:text-white transition font-medium">Cart</a>
+                <a href="/account" class="hover:text-whtie transition font-medium">My Account</a>
+                <a href="/chatbot/chat" class="hover:text-white transition font-medium">Contact Us</a>
                 <% if (locals.isOwner) { %>
-                    <a href="/owners/admin" class="hover:text-gray-900 transition font-medium">Admin</a>
+                    <a href="/owners/admin" class="hover:text-white transition font-medium">Admin</a>
                 <% } %>
                 <!-- Logout Button with Confirmation Modal Trigger -->
                 <button 
@@ -84,11 +84,11 @@
                 </button>
             </div>
         <% } else { %>
-            <div class="flex items-center gap-8 text-gray-700">
+            <div class="flex items-center gap-8 text-white">
                 <a href="/" class="hover:text-gray-900 transition font-medium">Home</a>
-                <a href="/chatbot/chat" class="hover:text-gray-900 transition font-medium">Contact Us</a>
-                <a href="/login" class="hover:text-gray-900 transition font-medium">Login</a>
-                <a href="/signup" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 font-medium">Sign Up</a>
+                <a href="/chatbot/chat" class="hover:text-white transition font-medium">Contact Us</a>
+                <a href="/login" class="hover:text-white transition font-medium">Login</a>
+                <a href="/signup" class="bg-[#777879] text-white px-4 py-2 rounded-md hover:bg-[#777879] transition duration-300 font-medium">Sign Up</a>
             </div>
         <% } %>
     </nav>
