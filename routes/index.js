@@ -4,6 +4,7 @@ const router = express.Router();
 const productModel = require("../models/product-model");
 const userModel = require("../models/user-model");
 const ownerModel = require("../models/owner-model");
+const Order = require('../models/order-model')
 const { model } = require("mongoose");
 const { verifyOTP, verifyOwnerOTP } = require('../controller/authController');
 const ChatService = require("../services/chatService");
@@ -394,20 +395,56 @@ router.get("/addtocart/:productid", isLoggedIn, async function (req, res) {
 
 router.get('/order-confirmation', isLoggedIn, async (req, res) => {
   try {
-    const latestOrder = await Order.findOne({ 
-      userId: req.user._id, 
-      status: 'PAID' 
-    }).sort({ createdAt: -1 });
+    // Check if user or owner is logged in
+    const isOwner = req.isOwner;
+    let currentUser = isOwner ? req.owner : req.user;
 
-    res.render('order-confirmation', { order: latestOrder });
+    if (!currentUser || !currentUser._id) {
+      console.error('User not found in request');
+      return res.redirect('/shop');
+    }
+
+    // Find the latest paid order for the current user
+    const latestOrder = await Order.findOne({ 
+      userId: currentUser._id,
+      status: 'PAID' 
+    })
+    .sort({ createdAt: -1 })
+    .populate({
+      path: 'products.productId', 
+      options: {strictPopulate: true},
+       select: 'name price description'
+    }) // Populate product details
+    .lean(); // Convert to plain JavaScript object
+
+    console.log('Found order:', latestOrder);
+
+    if (!latestOrder) {
+      req.flash('error', 'No recent order found');
+      return res.redirect('/shop');
+    }
+
+    // Format the price function
+    const formatPrice = (value) => {
+      return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR'
+      }).format(value);
+    };
+
+    res.render('order-confirmation', { 
+      order: latestOrder,
+      formatPrice,
+      currentUser,
+      isOwner,
+      error: req.flash('error')
+    });
+
   } catch (error) {
-    res.status(500).render('error', { error: 'Failed to fetch order details' });
+    console.error('Error fetching order:', error);
+    req.flash('error', 'Failed to fetch order details');
+    res.redirect('/shop');
   }
 });
-
-router.get("logout", isLoggedIn, function (req, res) {
-  res.render("shop");
-});
-
 
 module.exports = router;

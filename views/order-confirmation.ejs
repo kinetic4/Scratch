@@ -1,67 +1,92 @@
 <%- include('./partials/header') %>
-<div class="container">
-    <h1>Order Confirmation</h1>
-    
-    <% if (order) { %>
-        <div class="order-details">
-            <h2>Order #<%= order.orderId %></h2>
-            <p>Date: <%= order.createdAt.toLocaleDateString() %></p>
-            
-            <h3>Order Items</h3>
-            <table class="order-items">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Discount</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% order.products.forEach(function(product) { %>
-                    <tr>
-                        <td><%= product.productId %></td>
-                        <td><%= product.quantity %></td>
-                        <td>₹<%= product.price.toFixed(2) %></td>
-                        <td>₹<%= product.discount.toFixed(2) %></td>
-                        <td>₹<%= ((product.price * product.quantity) - product.discount).toFixed(2) %></td>
-                    </tr>
-                    <% }); %>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="4">Subtotal</td>
-                        <td>₹<%= order.amount.toFixed(2) %></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4">Platform Fee</td>
-                        <td>₹<%= order.platformFee.toFixed(2) %></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4"><strong>Total</strong></td>
-                        <td><strong>₹<%= (order.amount + order.platformFee).toFixed(2) %></strong></td>
-                    </tr>
-                </tfoot>
-            </table>
 
-            <div class="order-summary">
-                <p>Payment Gateway: <%= order.paymentDetails.gateway %></p>
-                <p>Payment ID: <%= order.paymentDetails.paymentId %></p>
-                <p>Currency: <%= order.paymentDetails.currency %></p>
-                <p>Order Status: <%= order.status %></p>
-                <p>Paid At: <%= order.paymentDetails.paidAt ? order.paymentDetails.paidAt.toLocaleString() : 'N/A' %></p>
+<div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 font-[Poppins]">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Order Confirmation</h1>
+        
+        <% if (order) { %>
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-6 mb-8">
+                <div class="border-b border-gray-200 pb-6 mb-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-2">Order #<%= order.orderId %></h2>
+                    <p class="text-gray-600">Date: <%= order.createdAt.toLocaleDateString() %></p>
+                </div>
+                
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Order Items</h3>
+                <% if (order.products && order.products.length > 0) { %>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Discount</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <% order.products.forEach(function(product) { %>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= product.productId.name %></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= product.quantity %></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₹<%= product.price.toFixed(2) %></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600">₹<%= product.discount.toFixed(2) %></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">₹<%= ((product.price * product.quantity) - product.discount).toFixed(2) %></td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                            <tfoot class="bg-gray-50">
+                                <tr>
+                                    <td colspan="4" class="px-6 py-3 text-sm font-medium text-gray-500">Subtotal</td>
+                                    <td class="px-6 py-3 text-sm font-medium text-gray-900">₹<%= order.amount.toFixed(2) %></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="px-6 py-3 text-sm font-medium text-gray-500">Platform Fee</td>
+                                    <td class="px-6 py-3 text-sm font-medium text-gray-900">₹<%= order.platformFee.toFixed(2) %></td>
+                                </tr>
+                                <tr class="bg-gray-100">
+                                    <td colspan="4" class="px-6 py-3 text-sm font-bold text-gray-900">Total</td>
+                                    <td class="px-6 py-3 text-sm font-bold text-gray-900">₹<%= (order.amount + order.platformFee).toFixed(2) %></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                <% } %>
+
+                <div class="mt-8 p-6 bg-gray-50 rounded-lg">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Order Summary</h3>
+                    <div class="space-y-2">
+                        <p class="flex justify-between text-sm text-gray-600">
+                            <span>Total Amount:</span>
+                            <span class="font-medium text-gray-900"><%= formatPrice(order.amount + order.platformFee) %></span>
+                        </p>
+                        <p class="flex justify-between text-sm text-gray-600">
+                            <span>Payment Status:</span>
+                            <span class="font-medium text-green-600"><%= order.status %></span>
+                        </p>
+                        <p class="flex justify-between text-sm text-gray-600">
+                            <span>Payment ID:</span>
+                            <span class="font-medium text-gray-900"><%= order.paymentDetails.paymentId %></span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <p class="text-lg text-gray-600 mb-4">Thank you for your purchase!</p>
+                    <a href="/shop" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+                        Continue Shopping
+                    </a>
+                </div>
             </div>
-        </div>
-
-        <div class="thank-you">
-            <p>Thank you for your purchase!</p>
-            <a href="/shop" class="btn">Continue Shopping</a>
-        </div>
-    <% } else { %>
-        <p>No recent order found.</p>
-        <a href="/shop" class="btn">Back to Shop</a>
-    <% } %>
+        <% } else { %>
+            <div class="bg-white shadow-lg rounded-lg p-8 text-center">
+                <p class="text-gray-600 mb-6"><%- error || 'No order found' %></p>
+                <a href="/shop" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+                    Return to Shop
+                </a>
+            </div>
+        <% } %>
+    </div>
 </div>
 
-    <%- include('./partials/footer') %>
+<%- include('./partials/footer') %>
