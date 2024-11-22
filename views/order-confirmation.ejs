@@ -1,0 +1,67 @@
+<%- include('./partials/header') %>
+<div class="container">
+    <h1>Order Confirmation</h1>
+    
+    <% if (order) { %>
+        <div class="order-details">
+            <h2>Order #<%= order.orderId %></h2>
+            <p>Date: <%= order.createdAt.toLocaleDateString() %></p>
+            
+            <h3>Order Items</h3>
+            <table class="order-items">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Discount</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% order.products.forEach(function(product) { %>
+                    <tr>
+                        <td><%= product.productId %></td>
+                        <td><%= product.quantity %></td>
+                        <td>₹<%= product.price.toFixed(2) %></td>
+                        <td>₹<%= product.discount.toFixed(2) %></td>
+                        <td>₹<%= ((product.price * product.quantity) - product.discount).toFixed(2) %></td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">Subtotal</td>
+                        <td>₹<%= order.amount.toFixed(2) %></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">Platform Fee</td>
+                        <td>₹<%= order.platformFee.toFixed(2) %></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><strong>Total</strong></td>
+                        <td><strong>₹<%= (order.amount + order.platformFee).toFixed(2) %></strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="order-summary">
+                <p>Payment Gateway: <%= order.paymentDetails.gateway %></p>
+                <p>Payment ID: <%= order.paymentDetails.paymentId %></p>
+                <p>Currency: <%= order.paymentDetails.currency %></p>
+                <p>Order Status: <%= order.status %></p>
+                <p>Paid At: <%= order.paymentDetails.paidAt ? order.paymentDetails.paidAt.toLocaleString() : 'N/A' %></p>
+            </div>
+        </div>
+
+        <div class="thank-you">
+            <p>Thank you for your purchase!</p>
+            <a href="/shop" class="btn">Continue Shopping</a>
+        </div>
+    <% } else { %>
+        <p>No recent order found.</p>
+        <a href="/shop" class="btn">Back to Shop</a>
+    <% } %>
+</div>
+
+    <%- include('./partials/footer') %>
