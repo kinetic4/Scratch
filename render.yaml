@@ -3,9 +3,9 @@ services:
     name: scatch
     env: node
     buildCommand: npm install
-    startCommand: node app.js
+    startCommand: npm start
     envVars:
       - key: MONGODB_URI
-        value: mongodb+srv://pratyushbhargava6:az3CycSvzhmLyYfB@cluster0.wcg4j.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+        value: mongodb+srv://pratyushbhargava6:az3CycSvzhmLyYfB@cluster0.wcg4j.mongodb.net/myDatabaseName?retryWrites=true&w=majority&appName=Cluster0
       - key: PORT
         value: 10000
