@@ -3,7 +3,7 @@ services:
     name: scatch
     env: node
     buildCommand: npm install
-    startCommand: npx nodemon
+    startCommand: node app.js
     envVars:
       - key: MONGODB_URI
         value: mongodb+srv://pratyushbhargava6:az3CycSvzhmLyYfB@cluster0.wcg4j.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
